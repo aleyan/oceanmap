@@ -3,7 +3,7 @@ package main
 import "fmt"
 import "os"
 
-func scrapeEverything(){
+func scrapeEverything() {
 	url := "http://digitalocean.com"
 	initial := new(Page)
 	initial.Url = url
@@ -11,12 +11,12 @@ func scrapeEverything(){
 	TraverseGraph()
 
 	fmt.Println()
-	fmt.Printf("Found out about %v pages with %v left\n", len(pages),len(unvisited) )
+	fmt.Printf("Found out about %v pages with %v left\n", len(pages), len(unvisited))
 	PrintGraph()
 	fmt.Println("that is all folks!")
 }
 
-func scrapeOnePage(url string){
+func scrapeOnePage(url string) {
 	initial := new(Page)
 	initial.Url = url
 	TraversePage(initial)
@@ -24,11 +24,10 @@ func scrapeOnePage(url string){
 }
 
 func main() {
-	if len(os.Args) == 2{
+	if len(os.Args) == 2 {
 		scrapeOnePage(os.Args[1])
 	} else {
 		scrapeEverything()
 	}
-
 
 }
