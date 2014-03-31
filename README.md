@@ -9,8 +9,10 @@ This software was written with go 1.2.1 in mind. It needs Mercurial SCM installe
 
 ##How to build
 Run the following command:
+
     go build oceanmap.go scrape go
 Alternativey you can run this program directly:
+
     go run oceanmap.go scrape go
 
 ##To Do
