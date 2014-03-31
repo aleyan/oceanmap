@@ -16,7 +16,9 @@ Alternativey you can run this program directly:
     go run oceanmap.go scrape go
 
 ##To Do
+* Track static assets used by a page.
 * The maximum number of pages to scan should be a parameter.
 * Add an option to capture links to resources in addition to other pages.
 * Instead of manually translating relative links from current page, use go URL library.
 * Use a string buffer when outputting the final graphml diagram.
+* Have arguments for ignoring links in footers.
