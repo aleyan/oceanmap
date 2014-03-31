@@ -1,11 +1,15 @@
 package main
 
-import "net/http"
-import "io/ioutil"
-import "fmt"
-import "regexp"
-import "strings"
+import (
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"regexp"
+	"strings"
+)
 
+//Depending on you install, you may have to get
+//these dependencies manually.
 //go get code.google.com/p/go-html-transform
 //go get code.google.com/p/go.net
 import (
@@ -25,10 +29,11 @@ var unvisited []*Page
 
 func init() {
 	pages = make(map[string]*Page)
-	//unvisited = make(map[string]*Page)
 }
 
 func CanonizeUrl(link, page string) string {
+	//Constructs a fully qualified path with protocol out of a possible
+	//relative path and the current page
 	url := ""
 	if m, _ := regexp.MatchString("^http(s)?://.*", link); m {
 		//fully qualified, just need to drop the #part
@@ -55,8 +60,6 @@ func CanonizeUrl(link, page string) string {
 	}
 	re := regexp.MustCompile("#[a-zA-Z0-9]*$")
 	url = re.ReplaceAllString(url, "")
-	//fmt.Println(page + "   " + link)
-	//fmt.Println("-->"+url)
 	return url
 }
 
@@ -84,7 +87,7 @@ func ExtractTitle(html string) string {
 		return title
 	}
 
-	// Find the item.  Should be a div node with the text "This is some text"
+	// Find the Title element and read it's text
 	if len(chn.Find(n)) > 0 {
 		title = chn.Find(n)[0].FirstChild.Data
 	}
@@ -108,7 +111,7 @@ func ExtractUrls(html string) []string {
 		return urls
 	}
 
-	// Find the item.  Should be a div node with the text "This is some text"
+	// Find the anchor and read it's href attribute
 	as := chn.Find(n)
 	for _, a := range as {
 		for _, attr := range a.Attr {
@@ -122,6 +125,7 @@ func ExtractUrls(html string) []string {
 }
 
 func GetPage(page Page) string {
+	//Goes to the interwebz to pull down the HTML of a given page object
 	resp, err := http.Get(page.Url)
 
 	if err != nil {
@@ -147,13 +151,18 @@ func appendIfMissing(slice []string, s string) []string {
 }
 
 func TraverseGraph() {
-	for i := 0; i <= 20 && len(unvisited) > 0; i++ {
+	for i := 0; i < 1000 && len(unvisited) > 0; i++ {
 		TraversePage(unvisited[0])
 		unvisited = unvisited[1:len(unvisited)]
+		if (i)%25 <= 1 {
+			fmt.Print(".")
+		}
 	}
 }
 
 func TraversePage(page *Page) {
+	//Visits a page and adds any links found to it's Links attribute
+	//and adds any previously unknown pages to unvisited slice.
 	if page.Visited {
 		return
 	}
@@ -180,7 +189,6 @@ func TraversePage(page *Page) {
 		}
 		page.Links = append(page.Links, linked)
 	}
-	fmt.Print("X")
 	page.Visited = true
 }
 func PrintPageLinks(page *Page) {

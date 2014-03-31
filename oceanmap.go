@@ -1,7 +1,10 @@
 package main
 
-import "fmt"
-import "os"
+import (
+	"fmt"
+	"os"
+	"strings"
+)
 
 func scrapeEverything() {
 	url := "http://digitalocean.com"
@@ -11,12 +14,16 @@ func scrapeEverything() {
 	TraverseGraph()
 
 	fmt.Println()
-	fmt.Printf("Found out about %v pages with %v left\n", len(pages), len(unvisited))
+	fmt.Printf("Found out about %v pages and scanned %v of them\n", len(pages), len(pages)-len(unvisited)+1)
 	PrintGraph()
 	fmt.Println("that is all folks!")
 }
 
 func scrapeOnePage(url string) {
+	if !strings.HasPrefix(url, "http") {
+		url = "http://" + url
+	}
+	fmt.Println(url)
 	initial := new(Page)
 	initial.Url = url
 	TraversePage(initial)
